@@ -16,10 +16,7 @@ import { SubmitAnswerDto } from './dto/submit-answer.dto';
 @WebSocketGateway({
   cors: {
     origin: '*', // For MVP - in production, specify frontend URL
-    credentials: true,
   },
-  transports: ['polling', 'websocket'], // Support both transports for better compatibility
-  allowUpgrades: true,
 })
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
@@ -28,13 +25,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private readonly gameService: GameService) {}
 
   handleConnection(client: Socket) {
-    console.log(`✅ Client connected: ${client.id}`);
-    console.log(`   Transport: ${client.conn.transport.name}`);
-    console.log(`   Total clients: ${this.server.sockets.sockets.size}`);
+    console.log(`Client connected: ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    console.log(`❌ Client disconnected: ${client.id}`);
+    console.log(`Client disconnected: ${client.id}`);
 
     // Find game and remove player
     const game = this.gameService.findGameBySocket(client.id);
